@@ -1,0 +1,24 @@
+﻿@model CustomerManagementClient.Models.CustomerViewModel
+
+<tr id="customerRow-@Model.Id" class="@(Model.IsAdded ? "added" : Model.IsEdited ? "edited" : "")">
+    <td>@Model.FirstName</td>
+    <td>@Model.Surname</td>
+    <td>@Model.Email</td>
+    <td>@Model.PhoneNumber</td>
+    <td>
+        <div class="d-flex flex-wrap gap-2">
+            <button class="btn btn-secondary btn-sm"
+                    hx-post="@Url.Page("/Index", pageHandler: "EditCustomer", values: new { customerId = Model.Id })"
+                    hx-target="#customerRow-@Model.Id"
+                    hx-swap="outerHTML">
+                <i class="fa fa-edit"></i> <span class="d-none d-sm-inline">Edit</span>
+            </button>
+            <button class="btn btn-danger btn-sm"
+                    hx-post="@Url.Page("/Index", pageHandler: "DeleteCustomer", values: new { customerId = Model.Id })"
+                    hx-target="#customerRow-@Model.Id"
+                    hx-swap="outerHTML">
+                <i class="fa fa-trash"></i> <span class="d-none d-sm-inline">Delete</span>
+            </button>
+        </div>
+    </td>
+</tr>

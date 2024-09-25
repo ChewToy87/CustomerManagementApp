@@ -1,0 +1,58 @@
+﻿@model CustomerManagementClient.Models.CustomerViewModel
+@using Microsoft.AspNetCore.Mvc.ModelBinding
+
+@{
+    var index = Model.Id.ToString();
+}
+
+<tr id="customerRow-@Model.Id" class="@(Model.IsAdded ? "added" : Model.IsEdited ? "edited" : "")">
+    <td>
+        <input asp-for="FirstName" name="Customers[@(index)].FirstName"
+               class="form-control form-control-sm @(ViewData.ModelState[$"Customers[{index}].FirstName"]?.Errors.Count > 0 ? "is-invalid" : "")"
+               placeholder="First Name" />
+        <div class="invalid-feedback">
+            @Html.ValidationMessage($"Customers[{index}].FirstName")
+        </div>
+    </td>
+    <td>
+        <input asp-for="Surname" name="Customers[@(index)].Surname"
+               class="form-control form-control-sm @(ViewData.ModelState[$"Customers[{index}].Surname"]?.Errors.Count > 0 ? "is-invalid" : "")"
+               placeholder="Surname" />
+        <div class="invalid-feedback">
+            @Html.ValidationMessage($"Customers[{index}].Surname")
+        </div>
+    </td>
+    <td>
+        <input asp-for="Email" name="Customers[@(index)].Email"
+               class="form-control form-control-sm @(ViewData.ModelState[$"Customers[{index}].Email"]?.Errors.Count > 0 ? "is-invalid" : "")"
+               placeholder="Email" />
+        <div class="invalid-feedback">
+            @Html.ValidationMessage($"Customers[{index}].Email")
+        </div>
+    </td>
+    <td>
+        <input asp-for="PhoneNumber" name="Customers[@(index)].PhoneNumber"
+               class="form-control form-control-sm @(ViewData.ModelState[$"Customers[{index}].PhoneNumber"]?.Errors.Count > 0 ? "is-invalid" : "")"
+               placeholder="Phone Number" />
+        <div class="invalid-feedback">
+            @Html.ValidationMessage($"Customers[{index}].PhoneNumber")
+        </div>
+    </td>
+    <td>
+        <div class="d-flex flex-wrap gap-2">
+            <button class="btn btn-success btn-sm"
+                    hx-post="@Url.Page("/Index", pageHandler: "SaveCustomer", values: new { customerId = Model.Id })"
+                    hx-include="#customerRow-@Model.Id"
+                    hx-target="#customerRow-@Model.Id"
+                    hx-swap="outerHTML">
+                <i class="fa fa-save"></i> <span class="d-none d-sm-inline">Save</span>
+            </button>
+            <button class="btn btn-secondary btn-sm"
+                    hx-post="@Url.Page("/Index", pageHandler: "CancelEdit", values: new { customerId = Model.Id })"
+                    hx-target="#customerRow-@Model.Id"
+                    hx-swap="outerHTML">
+                <i class="fa fa-times"></i> <span class="d-none d-sm-inline">Cancel</span>
+            </button>
+        </div>
+    </td>
+</tr>

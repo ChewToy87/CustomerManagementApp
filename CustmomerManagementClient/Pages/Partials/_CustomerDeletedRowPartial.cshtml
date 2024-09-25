@@ -1,0 +1,18 @@
+﻿@model CustomerManagementClient.Models.CustomerViewModel
+
+<tr id="customerRow-@Model.Id" class="deleted">
+    <td>@Model.FirstName</td>
+    <td>@Model.Surname</td>
+    <td>@Model.Email</td>
+    <td>@Model.PhoneNumber</td>
+    <td>
+        <div class="d-flex flex-wrap gap-2">
+            <button class="btn btn-warning btn-sm"
+                    hx-post="@Url.Page("/Index", pageHandler: "UndoDelete", values: new { customerId = Model.Id })"
+                    hx-target="#customerRow-@Model.Id"
+                    hx-swap="outerHTML">
+                <i class="fa fa-undo"></i> <span class="d-none d-sm-inline">Undo</span>
+            </button>
+        </div>
+    </td>
+</tr>

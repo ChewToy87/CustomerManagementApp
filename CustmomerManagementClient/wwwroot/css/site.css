@@ -1,0 +1,22 @@
+/* wwwroot/css/site.css */
+
+/* Adjusted styles for small screens */
+@media (max-width: 576px) {
+    .table-responsive td, .table-responsive th {
+        white-space: nowrap;
+    }
+}
+
+/* Background colors for different states */
+tr.added {
+    background-color: lightgreen;
+}
+
+tr.edited {
+    background-color: orange;
+}
+
+tr.deleted {
+    background-color: lightcoral;
+    text-decoration: line-through;
+}

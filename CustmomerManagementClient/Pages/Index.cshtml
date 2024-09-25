@@ -1,0 +1,64 @@
+﻿@page
+@model CustomerManagementClient.Pages.IndexModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Customer Management";
+}
+
+@Html.AntiForgeryToken()
+
+<div class="container">
+    <h1 class="my-4">@ViewData["Title"]</h1>
+
+    <div class="mb-3">
+        <button class="btn btn-success" hx-post="@Url.Page("/Index", pageHandler: "SaveChanges")" hx-trigger="click" hx-target="#modalContainer" hx-swap="innerHTML">
+            <i class="fa fa-save"></i> Save Changes
+        </button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped" id="customerTable">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Surname</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
+                    <th style="width: 200px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="customerTableBody">
+                @foreach (var customer in Model.Customers)
+                {
+                    if (customer.IsDeleted)
+                    {
+                        <partial name="Partials/_CustomerDeletedRowPartial" model="customer" />
+                    }
+                    else if (customer.IsEditing)
+                    {
+                        <partial name="Partials/_CustomerEditRowPartial" model="customer" />
+                    }
+                    else
+                    {
+                        <partial name="Partials/_CustomerRowPartial" model="customer" />
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add Button -->
+    <div class="mb-3">
+        <button class="btn btn-primary btn-block w-100" hx-post="@Url.Page("/Index", pageHandler: "AddCustomer")" hx-target="#customerTableBody" hx-swap="beforeend">
+            <i class="fa fa-plus"></i> Add
+        </button>
+    </div>
+
+    <!-- Confirmation Modal Container -->
+    <div id="modalContainer"></div>
+</div>
+
+@section Scripts {
+    <script src="~/js/site.js"></script>
+}
