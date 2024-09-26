@@ -13,7 +13,7 @@ namespace CustomerManagementClient.Pages
         private readonly ICustomerService _customerService;
         private readonly ILogger<IndexModel> _logger;
         private int _nextTempId;
-
+        public string PageTitle { get; set; } = "Customer Management";
         public IndexModel(ICustomerService customerService, ILogger<IndexModel> logger)
         {
             _customerService = customerService;
@@ -214,8 +214,10 @@ namespace CustomerManagementClient.Pages
             _nextTempId = -1;
             HttpContext.Session.SetInt32("NextTempId", _nextTempId);
 
-            return Partial("Index", this);
+            // Return the entire page to refresh
+            return Page(); // This returns the complete Index page with updated data
         }
+
 
         private async Task ProcessChangesAsync()
         {
