@@ -1,4 +1,3 @@
-// Pages/Index.cshtml.cs
 using CustomerManagementClient.DTOs;
 using CustomerManagementClient.Helpers;
 using CustomerManagementClient.Models;
@@ -14,11 +13,11 @@ namespace CustomerManagementClient.Pages
         private readonly ILogger<IndexModel> _logger;
         private int _nextTempId;
         public string PageTitle { get; set; } = "Customer Management";
+
         public IndexModel(ICustomerService customerService, ILogger<IndexModel> logger)
         {
             _customerService = customerService;
             _logger = logger;
-            // Do not access HttpContext here
         }
 
         public List<CustomerViewModel> Customers
@@ -202,6 +201,12 @@ namespace CustomerManagementClient.Pages
         {
             InitializeTempId();
 
+            if (!ModelState.IsValid)
+            {
+                // Return the modal again with validation errors if any
+                return Partial("Partials/_ConfirmationModalPartial", this);
+            }
+
             await ProcessChangesAsync();
 
             var customerDtos = await _customerService.GetCustomersAsync();
@@ -214,10 +219,9 @@ namespace CustomerManagementClient.Pages
             _nextTempId = -1;
             HttpContext.Session.SetInt32("NextTempId", _nextTempId);
 
-            // Return the entire page to refresh
-            return Page(); // This returns the complete Index page with updated data
+            // Return the customer table partial to replace the table body
+            return Partial("Partials/_CustomerTablePartial", customerViewModels);
         }
-
 
         private async Task ProcessChangesAsync()
         {

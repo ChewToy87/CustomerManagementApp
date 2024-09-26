@@ -3,7 +3,9 @@
 <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form method="post" asp-page-handler="ConfirmSaveChangesAsync">
+            <form hx-post="@Url.Page("/Index", pageHandler: "ConfirmSaveChanges")"
+                  hx-target="#customerTableBody"
+                  hx-swap="outerHTML">
                 @Html.AntiForgeryToken()
                 <div class="modal-header">
                     <h5 class="modal-title">Confirm Changes</h5>

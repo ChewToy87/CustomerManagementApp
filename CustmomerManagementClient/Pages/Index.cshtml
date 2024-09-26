@@ -8,12 +8,23 @@
     <h1 class="my-4">@Model.PageTitle</h1>
 
     <div class="mb-3">
-        <button class="btn btn-success" hx-post="@Url.Page("/Index", pageHandler: "SaveChanges")" hx-target="#modalContainer" hx-swap="innerHTML">
+        <button class="btn btn-success"
+                hx-post="@Url.Page("/Index", pageHandler: "SaveChanges")"
+                hx-trigger="click"
+                hx-target="#modalContainer"
+                hx-swap="innerHTML">
             <i class="fa fa-save"></i> Save Changes
         </button>
     </div>
 
-    <div class="table-responsive">
+    <div class="table-responsive position-relative">
+        <!-- Spinner Overlay -->
+        <div id="spinnerOverlay" class="spinner-overlay d-none">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
         <table class="table table-striped" id="customerTable">
             <thead>
                 <tr>
@@ -46,7 +57,10 @@
 
     <!-- Add Button -->
     <div class="mb-3">
-        <button class="btn btn-primary btn-block w-100" hx-post="@Url.Page("/Index", pageHandler: "AddCustomer")" hx-target="#customerTableBody" hx-swap="beforeend">
+        <button class="btn btn-primary btn-block w-100"
+                hx-post="@Url.Page("/Index", pageHandler: "AddCustomer")"
+                hx-target="#customerTableBody"
+                hx-swap="beforeend">
             <i class="fa fa-plus"></i> Add
         </button>
     </div>

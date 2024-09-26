@@ -1,0 +1,18 @@
+﻿@model List<CustomerViewModel>
+<tbody id="customerTableBody">
+    @foreach (var customer in Model)
+    {
+        if (customer.IsDeleted)
+        {
+            <partial name="Partials/_CustomerDeletedRowPartial" model="customer" />
+        }
+        else if (customer.IsEditing)
+        {
+            <partial name="Partials/_CustomerEditRowPartial" model="customer" />
+        }
+        else
+        {
+            <partial name="Partials/_CustomerRowPartial" model="customer" />
+        }
+    }
+</tbody>
