@@ -5,7 +5,7 @@
     <td>@Model.Surname</td>
     <td>@Model.Email</td>
     <td>@Model.PhoneNumber</td>
-    <td>
+    <td class="text-center">
         <div class="d-flex flex-wrap gap-2">
             <button class="btn btn-secondary btn-sm"
                     hx-post="@Url.Page("/Index", pageHandler: "EditCustomer", values: new { customerId = Model.Id })"
@@ -22,5 +22,5 @@
                 <i class="fa fa-trash"></i>
             </button>
         </div>
-    </td>
+    </t>
 </tr>
