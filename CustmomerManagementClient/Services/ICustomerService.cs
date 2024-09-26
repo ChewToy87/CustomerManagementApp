@@ -1,5 +1,4 @@
-﻿// Services/ICustomerService.cs
-using CustomerManagementClient.DTOs;
+﻿using CustomerManagementClient.DTOs;
 
 namespace CustomerManagementClient.Services
 {

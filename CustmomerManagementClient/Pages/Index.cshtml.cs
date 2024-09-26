@@ -1,5 +1,3 @@
-using CustomerManagementClient.DTOs;
-using CustomerManagementClient.Helpers;
 using CustomerManagementClient.Models;
 using CustomerManagementClient.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -10,37 +8,39 @@ namespace CustomerManagementClient.Pages
     public class IndexModel : PageModel
     {
         private readonly ICustomerService _customerService;
+        private readonly ICustomerSessionService _sessionService;
+        private readonly ICustomerMapper _mapper;
         private readonly ILogger<IndexModel> _logger;
-        private int _nextTempId;
+
         public string PageTitle { get; set; } = "Customer Management";
 
-        public IndexModel(ICustomerService customerService, ILogger<IndexModel> logger)
+        public IndexModel(
+            ICustomerService customerService,
+            ICustomerSessionService sessionService,
+            ICustomerMapper mapper,
+            ILogger<IndexModel> logger)
         {
             _customerService = customerService;
+            _sessionService = sessionService;
+            _mapper = mapper;
             _logger = logger;
         }
 
         public List<CustomerViewModel> Customers
         {
-            get
-            {
-                var customers = HttpContext.Session.GetObject<List<CustomerViewModel>>("Customers");
-                if (customers == null)
-                {
-                    customers = new List<CustomerViewModel>();
-                    HttpContext.Session.SetObject("Customers", customers);
-                }
-                return customers;
-            }
-            set
-            {
-                HttpContext.Session.SetObject("Customers", value);
-            }
+            get => _sessionService.GetCustomers();
+            set => _sessionService.SetCustomers(value);
+        }
+
+        private int NextTempId
+        {
+            get => _sessionService.GetNextTempId();
+            set => _sessionService.SetNextTempId(value);
         }
 
         private void InitializeTempId()
         {
-            _nextTempId = HttpContext.Session.GetInt32("NextTempId") ?? -1;
+            NextTempId = _sessionService.GetNextTempId() == -1 ? 0 : _sessionService.GetNextTempId();
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -48,7 +48,7 @@ namespace CustomerManagementClient.Pages
             InitializeTempId();
 
             var customerDtos = await _customerService.GetCustomersAsync();
-            var customerViewModels = customerDtos.Select(MapToViewModel).ToList();
+            var customerViewModels = customerDtos.Select(_mapper.MapToViewModel).ToList();
 
             Customers = customerViewModels;
 
@@ -59,8 +59,6 @@ namespace CustomerManagementClient.Pages
         {
             InitializeTempId();
 
-            var customers = Customers;
-
             var newCustomer = new CustomerViewModel
             {
                 Id = GenerateTempId(),
@@ -68,6 +66,7 @@ namespace CustomerManagementClient.Pages
                 IsEditing = true
             };
 
+            var customers = Customers;
             customers.Add(newCustomer);
             Customers = customers;
 
@@ -79,7 +78,6 @@ namespace CustomerManagementClient.Pages
             InitializeTempId();
 
             var customers = Customers;
-
             var customer = customers.FirstOrDefault(c => c.Id == customerId);
             if (customer != null)
             {
@@ -95,35 +93,31 @@ namespace CustomerManagementClient.Pages
             InitializeTempId();
 
             var customers = Customers;
-
             var customer = customers.FirstOrDefault(c => c.Id == customerId);
             if (customer != null)
             {
                 if (customer.IsAdded)
                 {
-
                     customers.Remove(customer);
                     Customers = customers;
-
                     return new EmptyResult();
                 }
                 else
                 {
                     customer.IsEditing = false;
                     Customers = customers;
-
                     return Partial("Partials/_CustomerRowPartial", customer);
                 }
             }
 
             return BadRequest();
         }
+
         public IActionResult OnPostDeleteCustomer(int customerId)
         {
             InitializeTempId();
 
             var customers = Customers;
-
             var customer = customers.FirstOrDefault(c => c.Id == customerId);
             if (customer != null)
             {
@@ -131,14 +125,12 @@ namespace CustomerManagementClient.Pages
                 {
                     customers.Remove(customer);
                     Customers = customers;
-
                     return new EmptyResult();
                 }
                 else
                 {
                     customer.IsDeleted = true;
                     Customers = customers;
-
                     return Partial("Partials/_CustomerDeletedRowPartial", customer);
                 }
             }
@@ -151,7 +143,6 @@ namespace CustomerManagementClient.Pages
             InitializeTempId();
 
             var customers = Customers;
-
             var customer = customers.FirstOrDefault(c => c.Id == customerId);
             if (customer != null)
             {
@@ -167,7 +158,6 @@ namespace CustomerManagementClient.Pages
             InitializeTempId();
 
             var customers = Customers;
-
             var customer = customers.FirstOrDefault(c => c.Id == customerId);
 
             if (customer == null)
@@ -216,12 +206,12 @@ namespace CustomerManagementClient.Pages
             await ProcessChangesAsync();
 
             var customerDtos = await _customerService.GetCustomersAsync();
-            var customerViewModels = customerDtos.Select(MapToViewModel).ToList();
+            var customerViewModels = customerDtos.Select(_mapper.MapToViewModel).ToList();
 
             Customers = customerViewModels;
 
-            _nextTempId = -1;
-            HttpContext.Session.SetInt32("NextTempId", _nextTempId);
+            NextTempId = -1;
+            _sessionService.SetNextTempId(NextTempId);
 
             return Partial("Partials/_CustomerTablePartial", customerViewModels);
         }
@@ -232,7 +222,7 @@ namespace CustomerManagementClient.Pages
 
             foreach (var customer in customers.ToList())
             {
-                var customerDto = MapToDto(customer);
+                var customerDto = _mapper.MapToDto(customer);
 
                 try
                 {
@@ -259,33 +249,9 @@ namespace CustomerManagementClient.Pages
 
         private int GenerateTempId()
         {
-            _nextTempId--;
-            HttpContext.Session.SetInt32("NextTempId", _nextTempId);
-            return _nextTempId;
-        }
-
-        private CustomerViewModel MapToViewModel(CustomerDto dto)
-        {
-            return new CustomerViewModel
-            {
-                Id = dto.Id,
-                FirstName = dto.FirstName,
-                Surname = dto.Surname,
-                Email = dto.Email,
-                PhoneNumber = dto.PhoneNumber
-            };
-        }
-
-        private CustomerDto MapToDto(CustomerViewModel vm)
-        {
-            return new CustomerDto
-            {
-                Id = vm.Id > 0 ? vm.Id : 0,
-                FirstName = vm.FirstName,
-                Surname = vm.Surname,
-                Email = vm.Email,
-                PhoneNumber = vm.PhoneNumber
-            };
+            NextTempId--;
+            _sessionService.SetNextTempId(NextTempId);
+            return NextTempId;
         }
     }
 }

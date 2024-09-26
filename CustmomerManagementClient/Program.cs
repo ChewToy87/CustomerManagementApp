@@ -1,4 +1,3 @@
-// Program.cs
 using CustomerManagementClient.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,10 +10,16 @@ builder.Services.AddSession(options =>
 {
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
 });
 
-// Register the CustomerService
+// Register custom services
 builder.Services.AddHttpClient<ICustomerService, CustomerService>();
+builder.Services.AddScoped<ICustomerSessionService, CustomerSessionService>();
+builder.Services.AddScoped<ICustomerMapper, CustomerMapper>();
+
+// Add IHttpContextAccessor to access HttpContext in services
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 var app = builder.Build();
 

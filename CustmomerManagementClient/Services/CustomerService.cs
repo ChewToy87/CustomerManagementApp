@@ -1,5 +1,4 @@
-﻿// Services/CustomerService.cs
-using CustomerManagementClient.DTOs;
+﻿using CustomerManagementClient.DTOs;
 using System.Text.Json;
 
 namespace CustomerManagementClient.Services
