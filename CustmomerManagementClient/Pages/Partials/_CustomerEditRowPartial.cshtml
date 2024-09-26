@@ -44,14 +44,16 @@
                     hx-post="@Url.Page("/Index", pageHandler: "SaveCustomer", values: new { customerId = Model.Id })"
                     hx-include="#customerRow-@Model.Id"
                     hx-target="#customerRow-@Model.Id"
-                    hx-swap="outerHTML">
-                <i class="fa fa-save"></i> <span class="d-none d-sm-inline">Save</span>
+                    hx-swap="outerHTML"
+                    aria-label="Save Customer">
+                <i class="fa fa-save"></i>
             </button>
             <button class="btn btn-secondary btn-sm"
                     hx-post="@Url.Page("/Index", pageHandler: "CancelEdit", values: new { customerId = Model.Id })"
                     hx-target="#customerRow-@Model.Id"
-                    hx-swap="outerHTML">
-                <i class="fa fa-times"></i> <span class="d-none d-sm-inline">Cancel</span>
+                    hx-swap="outerHTML"
+                    aria-label="Cancel Edit">
+                <i class="fa fa-times"></i>
             </button>
         </div>
     </td>
