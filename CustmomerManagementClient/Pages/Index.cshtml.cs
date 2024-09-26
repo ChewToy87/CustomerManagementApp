@@ -50,7 +50,6 @@ namespace CustomerManagementClient.Pages
             var customerDtos = await _customerService.GetCustomersAsync();
             var customerViewModels = customerDtos.Select(MapToViewModel).ToList();
 
-            // Store the customers in session
             Customers = customerViewModels;
 
             return Page();
@@ -70,7 +69,7 @@ namespace CustomerManagementClient.Pages
             };
 
             customers.Add(newCustomer);
-            Customers = customers; // Update session
+            Customers = customers;
 
             return Partial("Partials/_CustomerEditRowPartial", newCustomer);
         }
@@ -85,7 +84,7 @@ namespace CustomerManagementClient.Pages
             if (customer != null)
             {
                 customer.IsEditing = true;
-                Customers = customers; // Update session
+                Customers = customers;
             }
 
             return Partial("Partials/_CustomerEditRowPartial", customer);
@@ -100,13 +99,25 @@ namespace CustomerManagementClient.Pages
             var customer = customers.FirstOrDefault(c => c.Id == customerId);
             if (customer != null)
             {
-                customer.IsEditing = false;
-                Customers = customers; // Update session
+                if (customer.IsAdded)
+                {
+
+                    customers.Remove(customer);
+                    Customers = customers;
+
+                    return new EmptyResult();
+                }
+                else
+                {
+                    customer.IsEditing = false;
+                    Customers = customers;
+
+                    return Partial("Partials/_CustomerRowPartial", customer);
+                }
             }
 
-            return Partial("Partials/_CustomerRowPartial", customer);
+            return BadRequest();
         }
-
         public IActionResult OnPostDeleteCustomer(int customerId)
         {
             InitializeTempId();
@@ -118,19 +129,16 @@ namespace CustomerManagementClient.Pages
             {
                 if (customer.IsAdded)
                 {
-                    // If the customer is newly added and not yet saved, remove it from the list
                     customers.Remove(customer);
-                    Customers = customers; // Update session
+                    Customers = customers;
 
-                    // Remove the row from the table
                     return new EmptyResult();
                 }
                 else
                 {
                     customer.IsDeleted = true;
-                    Customers = customers; // Update session
+                    Customers = customers;
 
-                    // Return the deleted row partial
                     return Partial("Partials/_CustomerDeletedRowPartial", customer);
                 }
             }
@@ -148,7 +156,7 @@ namespace CustomerManagementClient.Pages
             if (customer != null)
             {
                 customer.IsDeleted = false;
-                Customers = customers; // Update session
+                Customers = customers;
             }
 
             return Partial("Partials/_CustomerRowPartial", customer);
@@ -164,7 +172,6 @@ namespace CustomerManagementClient.Pages
 
             if (customer == null)
             {
-                // Handle error
                 return BadRequest();
             }
 
@@ -186,7 +193,7 @@ namespace CustomerManagementClient.Pages
                 customer.IsEdited = true;
             }
 
-            Customers = customers; // Update session
+            Customers = customers;
 
             return Partial("Partials/_CustomerRowPartial", customer);
         }
@@ -203,7 +210,6 @@ namespace CustomerManagementClient.Pages
 
             if (!ModelState.IsValid)
             {
-                // Return the modal again with validation errors if any
                 return Partial("Partials/_ConfirmationModalPartial", this);
             }
 
@@ -212,14 +218,11 @@ namespace CustomerManagementClient.Pages
             var customerDtos = await _customerService.GetCustomersAsync();
             var customerViewModels = customerDtos.Select(MapToViewModel).ToList();
 
-            // Update the session with the latest data
             Customers = customerViewModels;
 
-            // Reset the temporary ID counter
             _nextTempId = -1;
             HttpContext.Session.SetInt32("NextTempId", _nextTempId);
 
-            // Return the customer table partial to replace the table body
             return Partial("Partials/_CustomerTablePartial", customerViewModels);
         }
 
@@ -248,9 +251,7 @@ namespace CustomerManagementClient.Pages
                 }
                 catch (Exception ex)
                 {
-                    // Log the exception
                     _logger.LogError(ex, $"Error processing customer ID {customerDto.Id}: {ex.Message}");
-                    // You may choose to handle the exception differently
                     throw;
                 }
             }
@@ -279,7 +280,7 @@ namespace CustomerManagementClient.Pages
         {
             return new CustomerDto
             {
-                Id = vm.Id > 0 ? vm.Id : 0, // Set Id to 0 if it's a new customer
+                Id = vm.Id > 0 ? vm.Id : 0,
                 FirstName = vm.FirstName,
                 Surname = vm.Surname,
                 Email = vm.Email,

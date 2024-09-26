@@ -1,13 +1,9 @@
-/* wwwroot/css/site.css */
-
-/* Adjusted styles for small screens */
 @media (max-width: 576px) {
     .table-responsive td, .table-responsive th {
         white-space: nowrap;
     }
 }
 
-/* Background colors for different states */
 tr.added {
     z-index: 2;
     background-color: lightgreen;
@@ -30,14 +26,15 @@ tr.deleted {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 255, 255, 0.8); /* Optional: Light overlay for better visibility */
+    background-color: rgba(255, 255, 255, 0.8);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    pointer-events: none; /* Allows interaction with underlying elements when spinner is hidden */
+    pointer-events: none; 
 }
 
 .d-none {
     display: none !important;
 }
+
