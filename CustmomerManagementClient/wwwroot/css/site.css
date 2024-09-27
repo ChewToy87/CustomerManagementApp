@@ -4,22 +4,6 @@
     }
 }
 
-tr.added {
-    z-index: 2;
-    background-color: lightgreen;
-}
-
-tr.edited {
-    z-index: 2;
-    background-color: orange;
-}
-
-tr.deleted {
-    z-index: 2;
-    background-color: lightcoral;
-    text-decoration: line-through;
-}
-
 .spinner-overlay {
     position: absolute;
     top: 0;

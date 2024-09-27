@@ -3,8 +3,7 @@ namespace CustomerManagementClient.DTOs
 {
     public class CustomerDto
     {
-        public int Id { get; set; }  // Non-nullable Id to match your API
-
+        public int Id { get; set; }
         public string FirstName { get; set; }
         public string Surname { get; set; }
         public string Email { get; set; }

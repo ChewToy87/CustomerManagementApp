@@ -5,8 +5,9 @@
     var index = Model.Id.ToString();
 }
 
-<tr id="customerRow-@Model.Id" class="@(Model.IsAdded ? "added" : Model.IsEdited ? "edited" : "")">
-    <td>
+<tr id="customerRow-@Model.Id" class="@(Model.IsAdded ?  "table-success" : Model.IsEdited ? "table-warning" : "")">
+    <td class="align-middle text-center">@Model.Id</td>
+    <td class="align-middle">
         <input asp-for="FirstName" name="Customers[@(index)].FirstName"
                class="form-control form-control-sm @(ViewData.ModelState[$"Customers[{index}].FirstName"]?.Errors.Count > 0 ? "is-invalid" : "")"
                placeholder="First Name" />
@@ -14,7 +15,7 @@
             @Html.ValidationMessage($"Customers[{index}].FirstName")
         </div>
     </td>
-    <td>
+    <td class="align-middle">
         <input asp-for="Surname" name="Customers[@(index)].Surname"
                class="form-control form-control-sm @(ViewData.ModelState[$"Customers[{index}].Surname"]?.Errors.Count > 0 ? "is-invalid" : "")"
                placeholder="Surname" />
@@ -22,7 +23,7 @@
             @Html.ValidationMessage($"Customers[{index}].Surname")
         </div>
     </td>
-    <td>
+    <td class="align-middle">
         <input asp-for="Email" name="Customers[@(index)].Email"
                class="form-control form-control-sm @(ViewData.ModelState[$"Customers[{index}].Email"]?.Errors.Count > 0 ? "is-invalid" : "")"
                placeholder="Email" />
@@ -30,7 +31,7 @@
             @Html.ValidationMessage($"Customers[{index}].Email")
         </div>
     </td>
-    <td>
+    <td class="align-middle">
         <input asp-for="PhoneNumber" name="Customers[@(index)].PhoneNumber"
                class="form-control form-control-sm @(ViewData.ModelState[$"Customers[{index}].PhoneNumber"]?.Errors.Count > 0 ? "is-invalid" : "")"
                placeholder="Phone Number" />
@@ -38,7 +39,7 @@
             @Html.ValidationMessage($"Customers[{index}].PhoneNumber")
         </div>
     </td>
-    <td>
+    <td class="align-middle">
         <div class="d-flex flex-wrap gap-2">
             <button class="btn btn-success btn-sm"
                     hx-post="@Url.Page("/Index", pageHandler: "SaveCustomer", values: new { customerId = Model.Id })"

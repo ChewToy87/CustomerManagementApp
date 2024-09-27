@@ -1,10 +1,11 @@
 ﻿@model CustomerManagementClient.Models.CustomerViewModel
 
-<tr id="customerRow-@Model.Id" class="@(Model.IsAdded ? "added" : Model.IsEdited ? "edited" : "")">
-    <td>@Model.FirstName</td>
-    <td>@Model.Surname</td>
-    <td>@Model.Email</td>
-    <td>@Model.PhoneNumber</td>
+<tr id="customerRow-@Model.Id" class="@(Model.IsAdded ? "table-success" : Model.IsEdited ? "table-warning" : "")">
+    <td class="align-middle text-center">@Model.Id</td>
+    <td class="align-middle">@Model.FirstName</td>
+    <td class="align-middle">@Model.Surname</td>
+    <td class="align-middle">@Model.Email</td>
+    <td class="align-middle">@Model.PhoneNumber</td>
     <td class="text-center">
         <div class="d-flex flex-wrap gap-2">
             <button class="btn btn-secondary btn-sm"

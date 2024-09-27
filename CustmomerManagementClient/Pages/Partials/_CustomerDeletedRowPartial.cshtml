@@ -1,17 +1,18 @@
 ﻿@model CustomerManagementClient.Models.CustomerViewModel
 
-<tr id="customerRow-@Model.Id" class="deleted">
-    <td>@Model.FirstName</td>
-    <td>@Model.Surname</td>
-    <td>@Model.Email</td>
-    <td>@Model.PhoneNumber</td>
+<tr id="customerRow-@Model.Id" class="@(Model.IsDeleted ? "table-danger text-decoration-line-through" : "")">
+    <td class="align-middle">@Model.Id</td>
+    <td class="align-middle">@Model.FirstName</td>
+    <td class="align-middle">@Model.Surname</td>
+    <td class="align-middle">@Model.Email</td>
+    <td class="align-middle">@Model.PhoneNumber</td>
     <td>
         <div class="d-flex flex-wrap gap-2">
             <button class="btn btn-warning btn-sm"
                     hx-post="@Url.Page("/Index", pageHandler: "UndoDelete", values: new { customerId = Model.Id })"
                     hx-target="#customerRow-@Model.Id"
                     hx-swap="outerHTML">
-                <i class="fa fa-undo"></i> <span class="d-none d-sm-inline">Undo</span>
+                <i class="fa fa-undo"></i> <span class="d-none d-sm-inline"></span>
             </button>
         </div>
     </td>

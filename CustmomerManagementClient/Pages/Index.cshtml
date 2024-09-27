@@ -7,7 +7,31 @@
 <div class="container">
     <h1 class="my-4">@Model.PageTitle</h1>
 
-    <div class="mb-3 d-flex justify-content-end">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <div class="p-2 border" style="border-radius: 5px;">
+            <table class="table table-borderless table-sm mb-0">
+                <tbody>
+                    <tr>
+                        <td style="padding: 0;">
+                            <div style="width: 20px; height: 20px; background-color: #d4edda; border: 1px solid #c3e6cb;"></div>
+                        </td>
+                        <td class="text-nowrap" style="padding: 0 10px;">Added</td>
+
+                        <td style="padding: 0;">
+                            <div style="width: 20px; height: 20px; background-color: #fff3cd; border: 1px solid #ffeeba;"></div>
+                        </td>
+                        <td class="text-nowrap" style="padding: 0 10px;">Edited</td>
+
+                        <td style="padding: 0;">
+                            <div style="width: 20px; height: 20px; background-color: #f8d7da; border: 1px solid #f5c6cb;"></div>
+                        </td>
+                        <td class="text-nowrap" style="padding: 0 10px;">Deleted</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Save Changes Button -->
         <button id="saveChangesButton" class="btn btn-success"
                 hx-post="@Url.Page("/Index", pageHandler: "SaveChanges")"
                 hx-trigger="click"
@@ -17,6 +41,7 @@
         </button>
     </div>
 
+    <!-- Main Content -->
     <div class="table-responsive position-relative">
         <!-- Spinner Overlay -->
         <div id="spinnerOverlay" class="spinner-overlay d-none">
@@ -25,14 +50,16 @@
             </div>
         </div>
 
-        <table class="table table-striped table-bordered table-hover" id="customerTable">
+        <table class="table table-bordered table-hover" id="customerTable">
             <thead class="table-light">
                 <tr>
+                    <th class="text-center" style="width: 5%;">ID</th>
                     <th style="width: 20%;">First Name</th>
                     <th style="width: 20%;">Surname</th>
                     <th style="width: 25%;">Email</th>
-                    <th style="width: 25%;">Phone Number</th>
+                    <th style="width: 20%;">Phone Number</th>
                     <th style="width: 10%;">Actions</th>
+
                 </tr>
             </thead>
             <tbody id="customerTableBody">
@@ -56,7 +83,7 @@
             <!-- Add Button Row -->
             <tfoot>
                 <tr>
-                    <td colspan="5" class="p-0">
+                    <td colspan="6" class="p-0">
                         <button class="btn btn-primary w-100 rounded-0"
                                 style="border-top-left-radius: 0; border-top-right-radius: 0;"
                                 hx-post="@Url.Page("/Index", pageHandler: "AddCustomer")"
