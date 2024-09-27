@@ -39,8 +39,6 @@ Frontend:
 ASP.NET Razor Pages
 Bootstrap 5 for responsive design
 HTMX for dynamic updates without full-page refreshes
-Getting Started
-Clone the Repository:
 
 API Endpoints: https://localhost:7139/api/customers
 Client UI: https://localhost:7133
